@@ -1,0 +1,181 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "collapsed_sections": [],
+      "authorship_tag": "ABX9TyMBd2ilLhj0XQd7g4VgWZkt",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Fredrick-Ofodongoro/AI_labs/blob/main/Uniform%20Cost%20Search%20in%20Python\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "-5UTwfJuwN3b"
+      },
+      "outputs": [],
+      "source": [
+        "from collections import defaultdict\n",
+        "from queue import PriorityQueue"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "class Graph:\n",
+        "    def __init__(self, directed): \n",
+        "        \"\"\"Parametrized constructor of class Graph \n",
+        "        which takes True if Graph is directed otherwise it takes False\"\"\"\n",
+        "        self.graph =  defaultdict(list)\n",
+        "        self.directed = directed\n",
+        "\n",
+        "    def add_edge(self, u, v, weight):\n",
+        "        \"\"\"Add Edges between two nodes along \n",
+        "        with weight as Algorithm is of UCS\"\"\"\n",
+        "        if self.directed:\n",
+        "            value = (weight, v)\n",
+        "            self.graph[u].append(value)\n",
+        "        else:\n",
+        "            value = (weight, v)\n",
+        "            self.graph[u].append(value)\n",
+        "            value = (weight, u)\n",
+        "            self.graph[v].append(value)\n",
+        "\n",
+        "    def ucs(self, current_node, goal_node):\n",
+        "        \"\"\"It takes starting node and \n",
+        "        goal node as parameters then it returns \n",
+        "        a path using Uniform Cost Search Algorithm\"\"\"\n",
+        "        visited = []  \n",
+        "        queue = PriorityQueue()\n",
+        "        queue.put((0, current_node))\n",
+        "        \n",
+        "        while not queue.empty():\n",
+        "            item = queue.get()\n",
+        "            current_node =  item[1]\n",
+        "            \n",
+        "            if current_node == goal_node:\n",
+        "                print(current_node, end = \" \")\n",
+        "                queue.queue.clear()\n",
+        "            else:\n",
+        "                if current_node in visited:\n",
+        "                    continue\n",
+        "                    \n",
+        "                print(current_node, end = \" \")\n",
+        "                visited.append(current_node)\n",
+        "\n",
+        "                for neighbour in self.graph[current_node]:\n",
+        "                        queue.put((neighbour[0], neighbour[1]))\n"
+      ],
+      "metadata": {
+        "id": "hXZns_Ahz5zM"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "g = Graph(False)"
+      ],
+      "metadata": {
+        "id": "xLdY5fRlz7S7"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "g.graph =  defaultdict(list)\n",
+        "g.add_edge('S', 'A', 1)\n",
+        "g.add_edge('S', 'G', 12)\n",
+        "g.add_edge('A', 'B', 3)\n",
+        "g.add_edge('A', 'C', 1)\n",
+        "g.add_edge('C', 'D', 1)\n",
+        "g.add_edge('B', 'D', 3)\n",
+        "g.add_edge('C', 'G', 2)\n",
+        "g.add_edge('D', 'G', 3)"
+      ],
+      "metadata": {
+        "id": "srN6bYwdz_Wg"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "g.graph"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "zfdTCoKB0GWQ",
+        "outputId": "df6a7d03-bd2b-4b5b-a72a-3a01c6a2a754"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "defaultdict(list,\n",
+              "            {'S': [(1, 'A'), (12, 'G')],\n",
+              "             'A': [(1, 'S'), (3, 'B'), (1, 'C')],\n",
+              "             'G': [(12, 'S'), (2, 'C'), (3, 'D')],\n",
+              "             'B': [(3, 'A'), (3, 'D')],\n",
+              "             'C': [(1, 'A'), (1, 'D'), (2, 'G')],\n",
+              "             'D': [(1, 'C'), (3, 'B'), (3, 'G')]})"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 14
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "g.ucs('S', 'D')"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "p9RlnJVs0P0I",
+        "outputId": "ddb8b2fd-a402-431c-807c-892b7623382d"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "S A C D "
+          ]
+        }
+      ]
+    }
+  ]
+}
